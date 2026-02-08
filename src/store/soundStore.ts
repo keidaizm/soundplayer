@@ -86,3 +86,18 @@ export function createId(): string {
   }
   return `clip-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
+
+export function sortClipsByName(clips: SoundClip[]): SoundClip[] {
+  const getNumber = (name: string) => {
+    const match = name.match(/(\d+)/);
+    return match ? Number(match[1]) : Number.POSITIVE_INFINITY;
+  };
+  return [...clips].sort((a, b) => {
+    const numA = getNumber(a.name);
+    const numB = getNumber(b.name);
+    if (numA !== numB) {
+      return numA - numB;
+    }
+    return a.name.localeCompare(b.name, "ja");
+  });
+}

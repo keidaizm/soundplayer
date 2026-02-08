@@ -11,6 +11,7 @@ import {
   ensureClipIdsExist,
   MixState,
   normalizeMixState,
+  sortClipsByName,
   SoundClip
 } from "../store/soundStore";
 
@@ -37,9 +38,10 @@ export default function MixPage() {
           return;
         }
         const normalized = normalizeMixState(stored);
-        const clipIds = new Set(clipList.map((clip) => clip.id));
+        const sortedClips = sortClipsByName(clipList);
+        const clipIds = new Set(sortedClips.map((clip) => clip.id));
         const cleaned = ensureClipIdsExist(normalized, clipIds);
-        setClips(clipList);
+        setClips(sortedClips);
         setMixState(cleaned);
         setLoaded(true);
       })

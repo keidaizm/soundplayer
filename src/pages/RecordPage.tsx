@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SoundCard from "../components/SoundCard";
 import { recordOnce } from "../audio/recorder";
 import { addClip, deleteClip, getAllClips } from "../store/indexedDb";
-import { createId, DEFAULT_CYCLE_SEC, SoundClip } from "../store/soundStore";
+import { createId, DEFAULT_CYCLE_SEC, sortClipsByName, SoundClip } from "../store/soundStore";
 
 export default function RecordPage() {
   const [clips, setClips] = useState<SoundClip[]>([]);
@@ -19,7 +19,7 @@ export default function RecordPage() {
     getAllClips()
       .then((list) => {
         if (active) {
-          setClips(list);
+          setClips(sortClipsByName(list));
         }
       })
       .catch(() => setError("おとがよみこめなかったよ"));
@@ -62,7 +62,7 @@ export default function RecordPage() {
         duration: recordSec
       };
       await addClip(clip);
-      setClips((prev) => [...prev, clip]);
+      setClips((prev) => sortClipsByName([...prev, clip]));
     } catch (err) {
       setError("ろくおんできなかったよ");
     } finally {
