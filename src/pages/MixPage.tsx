@@ -99,7 +99,7 @@ export default function MixPage() {
     }, delayMs);
   };
 
-  const handleDrop = async (slotId: string, clipId: string) => {
+  const handleDrop = async (slotId: string, clipId: string, autoPlay = false) => {
     const clip = clipMap.get(clipId);
     if (!clip) {
       return;
@@ -111,11 +111,16 @@ export default function MixPage() {
 
     clearQueueTimer(slotId);
 
-    updateSlot(slotId, (slot) => ({
-      ...slot,
-      clipId,
-      queued: playing
-    }));
+    const nextSlots = mixState.slots.map((slot) =>
+      slot.slotId === slotId
+        ? {
+            ...slot,
+            clipId,
+            queued: playing
+          }
+        : slot
+    );
+    setMixState((prev) => ({ ...prev, slots: nextSlots }));
 
     if (playing) {
       engineRef.current.setCycleSec(mixState.cycleSec);
@@ -135,6 +140,15 @@ export default function MixPage() {
       } else {
         updateSlot(slotId, (slot) => ({ ...slot, queued: false }));
       }
+    } else if (autoPlay) {
+      engineRef.current.setCycleSec(mixState.cycleSec);
+      const startAt = await engineRef.current.play(nextSlots, clipMap);
+      startLoopTicker(startAt);
+      setMixState((prev) => ({
+        ...prev,
+        slots: nextSlots.map((slot) => ({ ...slot, queued: false }))
+      }));
+      setPlaying(true);
     }
   };
 
@@ -251,7 +265,7 @@ export default function MixPage() {
                   if (!selectedClipId) {
                     return;
                   }
-                  handleDrop(slot.slotId, selectedClipId);
+                  handleDrop(slot.slotId, selectedClipId, true);
                   setSelectedClipId(null);
                 }}
                 onRemove={() => {
