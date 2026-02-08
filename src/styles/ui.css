@@ -130,6 +130,56 @@ h2 {
   box-shadow: var(--shadow);
 }
 
+.tempo-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-pulse {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #fff4c8;
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-shadow: inset 0 0 0 6px #ffd400;
+}
+
+.record-pulse.active {
+  background: #ffe7a3;
+}
+
+.pulse-dot {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #ffd400;
+  opacity: 0.4;
+  animation: pulse 0.6s ease;
+}
+
+.pulse-character {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+}
+
+.pulse-character img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pulse-character.active {
+  animation: bounce 0.6s ease;
+}
+
 .countdown {
   font-size: 22px;
   font-weight: 700;
@@ -168,6 +218,7 @@ h2 {
   flex-direction: column;
   gap: 8px;
   min-height: 110px;
+  position: relative;
 }
 
 .sound-card.draggable {
@@ -177,6 +228,31 @@ h2 {
 .sound-card.selected {
   border: 4px solid #00b894;
   box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.2);
+}
+
+.sound-card.dur-5 {
+  border: 4px solid #4d9cff;
+}
+
+.sound-card.dur-10 {
+  border: 4px solid #ff9f43;
+}
+
+.duration-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #4d9cff;
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.sound-card.dur-10 .duration-badge {
+  background: #ff9f43;
 }
 
 .sound-title {
@@ -310,6 +386,21 @@ input[type="range"] {
   }
   50% {
     box-shadow: 0 0 0 6px rgba(255, 212, 0, 0.6);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.2;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
   }
 }
 

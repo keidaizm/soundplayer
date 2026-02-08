@@ -21,9 +21,11 @@ export default function SoundCard({
   onDragStart,
   onSelect
 }: SoundCardProps) {
+  const durationLabel = clip.duration >= 10 ? "10びょう" : "5びょう";
+  const durationClass = clip.duration >= 10 ? "dur-10" : "dur-5";
   return (
     <div
-      className={`sound-card ${draggable ? "draggable" : ""} ${selected ? "selected" : ""}`}
+      className={`sound-card ${draggable ? "draggable" : ""} ${selected ? "selected" : ""} ${durationClass}`}
       draggable={draggable}
       onDragStart={(event) => {
         if (!draggable) {
@@ -38,6 +40,7 @@ export default function SoundCard({
         }
       }}
     >
+      <div className="duration-badge">{durationLabel}</div>
       <div className="sound-title">{clip.name}</div>
       <div className="sound-actions">
         {onPlay && (
