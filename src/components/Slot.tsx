@@ -8,6 +8,7 @@ type SlotProps = {
   characterUri: string;
   characterName: string;
   onDropClip: (clipId: string) => void;
+  onTapDrop?: () => void;
   onRemove: () => void;
   onVolumeChange: (value: number) => void;
   onMuteToggle: () => void;
@@ -21,6 +22,7 @@ export default function Slot({
   characterUri,
   characterName,
   onDropClip,
+  onTapDrop,
   onRemove,
   onVolumeChange,
   onMuteToggle
@@ -37,6 +39,9 @@ export default function Slot({
         if (clipId) {
           onDropClip(clipId);
         }
+      }}
+      onClick={() => {
+        onTapDrop?.();
       }}
     >
       <div className="slot-label">

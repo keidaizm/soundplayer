@@ -20,6 +20,7 @@ export default function MixPage() {
   const [mixState, setMixState] = useState<MixState>(createDefaultMixState());
   const [playing, setPlaying] = useState(false);
   const [pulseTick, setPulseTick] = useState(0);
+  const [selectedClipId, setSelectedClipId] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const engineRef = useRef(new AudioEngine());
@@ -210,6 +211,7 @@ export default function MixPage() {
         </div>
         <Transport playing={playing} onPlay={handlePlay} onStop={handleStop} />
         {error && <div className="error">{error}</div>}
+        {selectedClipId && <div className="hint">カードをえらんだよ！ならべるところをタップしてね</div>}
       </section>
 
       <main className="mix-layout">
@@ -218,7 +220,14 @@ export default function MixPage() {
           <div className="card-grid">
             {clips.length === 0 && <p className="empty">おとがないよ</p>}
             {clips.map((clip) => (
-              <SoundCard key={clip.id} clip={clip} draggable />
+              <SoundCard
+                key={clip.id}
+                clip={clip}
+                draggable
+                selectable
+                selected={selectedClipId === clip.id}
+                onSelect={(picked) => setSelectedClipId(picked.id)}
+              />
             ))}
           </div>
         </section>
@@ -238,6 +247,13 @@ export default function MixPage() {
                 characterUri={character.dataUri}
                 characterName={character.name}
                 onDropClip={(clipId) => handleDrop(slot.slotId, clipId)}
+                onTapDrop={() => {
+                  if (!selectedClipId) {
+                    return;
+                  }
+                  handleDrop(slot.slotId, selectedClipId);
+                  setSelectedClipId(null);
+                }}
                 onRemove={() => {
                   clearQueueTimer(slot.slotId);
                   engineRef.current.stopSlot(slot.slotId);
