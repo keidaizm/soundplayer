@@ -173,6 +173,7 @@ export default function MixPage() {
 
   useEffect(() => {
     return () => {
+      handleStop();
       stopLoopTicker();
     };
   }, []);
@@ -181,7 +182,13 @@ export default function MixPage() {
     <div className="page mix">
       <header className="page-header">
         <h1>おとをならべる</h1>
-        <button className="btn big" onClick={() => navigate("/record")}>
+        <button
+          className="btn big"
+          onClick={() => {
+            handleStop();
+            navigate("/record");
+          }}
+        >
           ⬅ もどる
         </button>
       </header>
